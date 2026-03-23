@@ -1,0 +1,66 @@
+food_name,calories,carbs_g,protein_g,fat_g,category,food_type
+Roti,120,22,3,1,Breakfast,veg
+Paratha,260,35,6,12,Breakfast,veg
+Poha,180,30,4,5,Breakfast,veg
+Upma,200,32,5,6,Breakfast,veg
+Idli,58,12,2,0.4,Breakfast,veg
+Dosa,168,30,4,3,Breakfast,veg
+Masala Dosa,250,38,6,8,Breakfast,veg
+Thepla,210,30,5,8,Breakfast,veg
+Veg Sandwich,220,30,7,8,Breakfast,veg
+Oats Cooked,68,12,2.4,1.4,Breakfast,veg
+Steamed Rice,130,28,2.4,0.3,Rice Dish,veg
+Jeera Rice,180,32,3,4,Rice Dish,veg
+Veg Pulao,210,35,5,6,Rice Dish,veg
+Khichdi,160,28,6,3,Rice Dish,veg
+Lemon Rice,190,34,4,5,Rice Dish,veg
+Curd Rice,220,36,6,7,Rice Dish,veg
+Dal Tadka,180,20,8,7,Main Dish,veg
+Moong Dal,105,19,7,0.5,Main Dish,veg
+Rajma Masala,220,30,9,6,Main Dish,veg
+Chole Masala,240,32,10,8,Main Dish,veg
+Paneer Butter Masala,320,10,12,26,Main Dish,veg
+Palak Paneer,260,8,11,21,Main Dish,veg
+Mixed Veg Curry,150,18,5,5,Main Dish,veg
+Aloo Gobi,140,20,4,4,Main Dish,veg
+Bhindi Masala,130,14,3,5,Main Dish,veg
+Veg Kofta,280,22,8,18,Main Dish,veg
+Tomato Sabzi,90,10,2,3,Main Dish,veg
+Potato Curry,170,26,4,5,Main Dish,veg
+Samosa,262,32,6,14,Snack/FastFood,veg
+Kachori,280,30,7,16,Snack/FastFood,veg
+Dhokla,160,25,6,4,Snack/FastFood,veg
+Khaman,180,28,7,5,Snack/FastFood,veg
+Pakora,312,25,7,20,Snack/FastFood,veg
+Bhel Puri,150,30,4,2,Snack/FastFood,veg
+Sev Puri,210,32,5,8,Snack/FastFood,veg
+Veg Burger,295,33,12,10,Snack/FastFood,veg
+Veg Pizza,266,33,11,10,Snack/FastFood,veg
+Noodles Veg,220,35,6,7,Snack/FastFood,veg
+French Fries,312,41,3.4,15,Snack/FastFood,veg
+Pasta Veg,200,31,6,5,Snack/FastFood,veg
+Gulab Jamun,300,45,4,12,Sweet,veg
+Jalebi,310,50,3,10,Sweet,veg
+Ladoo,290,38,6,14,Sweet,veg
+Barfi,350,40,7,18,Sweet,veg
+Kheer,180,28,6,6,Sweet,veg
+Rasgulla,186,45,4,0.2,Sweet,veg
+Tea,30,5,1,1,Beverage,veg
+Coffee,2,0,0.3,0,Beverage,veg
+Lassi,150,18,6,6,Beverage,veg
+Buttermilk,40,5,3,1,Beverage,veg
+Boiled Egg,155,1.1,13,11,Breakfast,egg
+Omelette,190,2,12,15,Breakfast,egg
+Egg Curry,180,4,12,12,Main Dish,egg
+Egg Bhurji,210,3,14,16,Main Dish,egg
+Masala Omelette,220,3,13,18,Breakfast,egg
+Chicken Curry,240,6,20,16,Main Dish,nonveg
+Butter Chicken,300,8,22,20,Main Dish,nonveg
+Chicken Biryani,290,35,15,12,Rice Dish,nonveg
+Grilled Chicken,210,0,32,5,Main Dish,nonveg
+Chicken Tikka,230,3,28,9,Snack/FastFood,nonveg
+Fish Curry,220,5,22,14,Main Dish,nonveg
+Grilled Fish,180,0,26,6,Main Dish,nonveg
+Mutton Curry,310,4,24,24,Main Dish,nonveg
+Keema Masala,280,6,21,22,Main Dish,nonveg
+Chicken Fried Rice,260,32,14,8,Rice Dish,nonveg

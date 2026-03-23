@@ -1,0 +1,170 @@
+/**
+ * Ojasvita - Global Styles
+ * 
+ * This file contains Tailwind CSS directives and custom styles.
+ * Tailwind is configured in tailwind.config.js
+ */
+
+/* Tailwind CSS base directives */
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/**
+ * Custom base styles
+ * These are applied before Tailwind utilities
+ */
+@layer base {
+  /* Set default font family */
+  body {
+    @apply font-sans text-gray-800 bg-gray-50;
+  }
+  
+  /* Smooth scrolling */
+  html {
+    scroll-behavior: smooth;
+  }
+}
+
+/**
+ * Custom component styles
+ * These are reusable component classes
+ */
+@layer components {
+  /* Card component style */
+  .card {
+    @apply bg-white rounded-xl shadow-card p-6 transition-shadow duration-200 hover:shadow-card-hover;
+  }
+  
+  /* Button primary style */
+  .btn-primary {
+    @apply bg-primary-500 text-white px-4 py-2 rounded-lg font-medium 
+           transition-colors duration-200 hover:bg-primary-600 
+           focus:outline-none focus:ring-2 focus:ring-primary-500 focus:ring-offset-2;
+  }
+  
+  /* Button secondary style */
+  .btn-secondary {
+    @apply bg-gray-100 text-gray-700 px-4 py-2 rounded-lg font-medium 
+           transition-colors duration-200 hover:bg-gray-200 
+           focus:outline-none focus:ring-2 focus:ring-gray-400 focus:ring-offset-2;
+  }
+  
+  /* Button danger style */
+  .btn-danger {
+    @apply bg-red-500 text-white px-4 py-2 rounded-lg font-medium 
+           transition-colors duration-200 hover:bg-red-600 
+           focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2;
+  }
+  
+  /* Input field style */
+  .input-field {
+    @apply w-full px-4 py-2 border border-gray-300 rounded-lg 
+           focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent
+           placeholder-gray-400 transition-all duration-200;
+  }
+  
+  /* Label style */
+  .label {
+    @apply block text-sm font-medium text-gray-700 mb-1;
+  }
+  
+  /* Badge style */
+  .badge {
+    @apply inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium;
+  }
+  
+  /* Badge normal (green) */
+  .badge-normal {
+    @apply bg-green-100 text-green-800;
+  }
+  
+  /* Badge cheat (amber) */
+  .badge-cheat {
+    @apply bg-amber-100 text-amber-800;
+  }
+  
+  /* Badge event (purple) */
+  .badge-event {
+    @apply bg-purple-100 text-purple-800;
+  }
+  
+  /* Progress bar */
+  .progress-bar {
+    @apply h-2 bg-gray-200 rounded-full overflow-hidden;
+  }
+  
+  /* Progress bar fill */
+  .progress-bar-fill {
+    @apply h-full bg-primary-500 rounded-full transition-all duration-500;
+  }
+}
+
+/**
+ * Custom utility styles
+ * These are custom utility classes
+ */
+@layer utilities {
+  /* Text balance for headings */
+  .text-balance {
+    text-wrap: balance;
+  }
+  
+  /* Hide scrollbar */
+  .scrollbar-hide {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+  
+  /* Scrollbar hide for webkit */
+  .scrollbar-hide::-webkit-scrollbar {
+    display: none;
+  }
+}
+
+/**
+ * Custom animations
+ */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes slideIn {
+  from {
+    opacity: 0;
+    transform: translateX(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes pulse {
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.5;
+  }
+}
+
+/* Animation classes */
+.animate-fade-in {
+  animation: fadeIn 0.3s ease-out forwards;
+}
+
+.animate-slide-in {
+  animation: slideIn 0.3s ease-out forwards;
+}
+
+.animate-pulse-slow {
+  animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+}
