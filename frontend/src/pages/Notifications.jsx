@@ -317,7 +317,7 @@ const Notifications = () => {
 
       {/* Filter Tabs */}
       <div className="border-b border-gray-200">
-        <nav className="-mb-px flex space-x-8" aria-label="Tabs">
+        <nav className="-mb-px flex space-x-4 sm:space-x-8 overflow-x-auto pb-1" aria-label="Tabs">
           {[
             { id: 'all', label: 'All', count: mealPlans.length },
             { id: 'planned', label: 'Planned', count: mealPlans.filter(p => p.status === 'planned').length },

@@ -69,7 +69,7 @@ const Profile = () => {
 
       {/* Profile Card */}
       <div className="card">
-        <div className="flex items-center justify-between mb-6">
+        <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 mb-6">
           <div className="flex items-center gap-4">
             <div className="h-16 w-16 rounded-full bg-primary-100 flex items-center justify-center">
               <span className="text-2xl font-bold text-primary-600">
@@ -78,7 +78,7 @@ const Profile = () => {
             </div>
             <div>
               <h2 className="text-xl font-semibold text-gray-900">{user?.name}</h2>
-              <p className="text-gray-500">{user?.email}</p>
+              <p className="text-gray-500 truncate max-w-[200px] sm:max-w-xs">{user?.email}</p>
             </div>
           </div>
           <button
