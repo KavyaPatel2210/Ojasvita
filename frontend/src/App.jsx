@@ -28,6 +28,7 @@ import { NotificationProvider } from './context/NotificationContext';
 // Import pages
 import Login from './pages/Login';
 import Register from './pages/Register';
+import InstallButton from './components/InstallButton';
 import LandingPage from './pages/LandingPage';
 import Dashboard from './pages/Dashboard';
 import Meals from './pages/Meals';
@@ -295,6 +296,7 @@ function App() {
             <Route path="*" element={<CatchAllRedirect />} />
           </Routes>
           </SessionManager>
+          <InstallButton />
         </Router>
       </NotificationProvider>
     </AuthProvider>

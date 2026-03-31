@@ -13,6 +13,7 @@ import React from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import { useNotifications } from '../context/NotificationContext';
+import { NotificationUtil } from '../utils/notificationUtil';
 
 
 /**
@@ -315,6 +316,21 @@ const Navbar = ({ onMenuClick }) => {
                     >
                       Settings
                     </Link>
+
+                    {/* Enable Notifications Button */}
+                    <button
+                      onClick={() => {
+                        closeDropdown();
+                        NotificationUtil.requestPermission().then(granted => {
+                          if (granted) {
+                            NotificationUtil.showNotification('🎉 Welcome!', 'Push notifications are now active for Ojasvita.');
+                          }
+                        });
+                      }}
+                      className="block w-full px-4 py-2 text-left text-sm text-primary-700 hover:bg-gray-100"
+                    >
+                      Enable Notifications
+                    </button>
 
                     {/* Logout button */}
                     <button
