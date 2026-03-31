@@ -157,19 +157,19 @@ export const NotificationProvider = ({ children }) => {
     setUnreadCount(count);
   }, [notifications]);
 
-  const { isAuthenticated } = useAuth();
+  const { isAuthenticated, user } = useAuth();
 
   /**
    * Automatically subscribe user to server-side push if they are authenticated 
    * and don't have a subscription stored in their profile yet.
    */
   useEffect(() => {
-    if (isAuthenticated && useAuth().user && !useAuth().user.preferences?.pushSubscription) {
-      if (Notification.permission === 'granted') {
+    if (isAuthenticated && user && !user.preferences?.pushSubscription) {
+      if (typeof Notification !== 'undefined' && Notification.permission === 'granted') {
         NotificationUtil.subscribeUserToServer(authAPI);
       }
     }
-  }, [isAuthenticated]);
+  }, [isAuthenticated, user]);
 
   /**
    * Initial fetch and periodic checking
