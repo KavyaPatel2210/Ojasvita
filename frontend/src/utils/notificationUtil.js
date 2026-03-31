@@ -86,10 +86,9 @@ export const NotificationUtil = {
     if (timeUntil <= 0) return;
 
     try {
-      const registration = await navigator.serviceWorker.ready;
-      
       // Feature check for Notification Triggers API
-      if ('showTrigger' in Notification.prototype) {
+      if ('showTrigger' in Notification.prototype && navigator.serviceWorker) {
+        const registration = await navigator.serviceWorker.ready;
         await registration.showNotification(title, {
           tag: id, // unique tag prevents duplicates
           body: body,
@@ -100,13 +99,17 @@ export const NotificationUtil = {
           showTrigger: new TimestampTrigger(targetDate.getTime())
         });
       } else {
-        // Fallback for desktop/iOS: Fire if the app tab happens to be alive
+        // Fallback for desktop/iOS or Dev Mode: Fire if the app tab happens to be alive
         setTimeout(() => {
           NotificationUtil.showNotification(title, body, '/logo.png');
         }, timeUntil);
       }
     } catch (err) {
       console.warn("Could not schedule background notification:", err);
+      // Failsafe fallback
+      setTimeout(() => {
+        NotificationUtil.showNotification(title, body, '/logo.png');
+      }, timeUntil);
     }
   }
 };
