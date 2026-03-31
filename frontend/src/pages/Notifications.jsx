@@ -405,37 +405,37 @@ const Notifications = () => {
 
                   {/* Content */}
                   <div className="min-w-0 flex-auto">
-                    <div className="flex items-start justify-between gap-x-4">
-                      <div>
-                        <p className={`text-sm font-semibold leading-6 ${
+                    <div className="flex flex-col sm:flex-row sm:items-start justify-between gap-4">
+                      <div className="min-w-0 flex-1">
+                        <p className={`text-sm font-semibold leading-6 break-words ${
                           plan.notificationStatus === 'due' || plan.notificationStatus === 'overdue' ? 'text-red-700' : 
                           plan.status === 'completed' ? 'text-green-700' : 'text-gray-900'
                         }`}>
                           {title}
                         </p>
-                        <p className="mt-1 text-sm leading-5 text-gray-500">
+                        <p className="mt-1 text-sm leading-5 text-gray-500 break-words">
                           {message}
                         </p>
-                        <div className="mt-2 flex items-center gap-x-2 text-xs leading-5 text-gray-500">
-                          <span className="flex items-center gap-x-1">
+                        <div className="mt-2 flex flex-wrap items-center gap-x-2 gap-y-1 text-xs leading-5 text-gray-500">
+                          <span className="flex items-center gap-x-1 whitespace-nowrap">
                             <svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="currentColor">
                               <path strokeLinecap="round" strokeLinejoin="round" d="M12 6v6h4.5m4.5 0a9 9 0 11-18 0 9 9 0 0118 0z" />
                             </svg>
                             {plan.scheduledTime}
                           </span>
-                          <span>•</span>
-                          <span className={`inline-flex items-center rounded-md px-2 py-1 text-xs font-medium ${getStatusColor(plan.notificationStatus)}`}>
+                          <span className="hidden sm:inline">•</span>
+                          <span className={`inline-flex whitespace-nowrap items-center rounded-md px-2 py-1 text-xs font-medium ${getStatusColor(plan.notificationStatus)}`}>
                             {getStatusLabel(plan.notificationStatus, plan.minutesUntil)}
                           </span>
-                          <span>•</span>
-                          <span className="text-gray-400">
+                          <span className="hidden sm:inline">•</span>
+                          <span className="text-gray-400 whitespace-nowrap">
                             {plan.plannedCalories} cal
                           </span>
                         </div>
                       </div>
                       
                       {/* Actions */}
-                      <div className="flex items-center gap-x-2">
+                      <div className="flex items-center gap-x-2 mt-2 sm:mt-0 shrink-0">
                         {plan.status === 'planned' && (
                           <button
                             onClick={() => handleCompleteMeal(plan._id)}
