@@ -22,13 +22,10 @@
 const express = require('express');
 const router = express.Router();
 const { 
-  register, 
-  login, 
-  getProfile, 
-  updateProfile,
   updatePassword,
   recalculateMetrics
 } = require('../controllers/authController');
+const { subscribe, unsubscribe } = require('../controllers/pushController');
 const { protect } = require('../middleware/authMiddleware');
 
 /**
@@ -121,6 +118,18 @@ router.put('/password', protect, updatePassword);
  * Authorization: Bearer <token>
  */
 router.post('/recalculate', protect, recalculateMetrics);
+
+/**
+ * @route   POST /api/auth/subscribe
+ * @desc    Save push subscription
+ */
+router.post('/subscribe', protect, subscribe);
+
+/**
+ * @route   POST /api/auth/unsubscribe
+ * @desc    Remove push subscription
+ */
+router.post('/unsubscribe', protect, unsubscribe);
 
 // Export the router
 module.exports = router;

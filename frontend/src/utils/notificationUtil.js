@@ -33,6 +33,54 @@ export const NotificationUtil = {
       return false;
     }
   },
+  
+  // Public VAPID key (must match backend)
+  VAPID_PUBLIC_KEY: 'BF9zG_zK7OqK6B98JqYn9r9g8vV8jX9L7p3B0-83YvN6-68n-2SW_vddUZ',
+
+  /**
+   * Register the device with the backend for real server-side push
+   * This is the "Gold Standard" that works on closed apps
+   */
+  subscribeUserToServer: async (authAPI) => {
+    if (!NotificationUtil.isSupported()) return false;
+
+    try {
+      const registration = await navigator.serviceWorker.ready;
+      
+      // Check if already subscribed
+      let subscription = await registration.pushManager.getSubscription();
+      
+      if (!subscription) {
+        // Subscribe the user
+        subscription = await registration.pushManager.subscribe({
+          userVisibleOnly: true,
+          applicationServerKey: NotificationUtil.urlBase64ToUint8Array(NotificationUtil.VAPID_PUBLIC_KEY)
+        });
+        console.log("New Push Subscription created:", subscription);
+      }
+
+      // Send subscription to backend
+      const response = await authAPI.subscribe(subscription);
+      return response.data.success;
+    } catch (error) {
+      console.error("Error subscribing to server push:", error);
+      return false;
+    }
+  },
+
+  /**
+   * Helper to convert VAPID key
+   */
+  urlBase64ToUint8Array: (base64String) => {
+    const padding = '='.repeat((4 - base64String.length % 4) % 4);
+    const base64 = (base64String + padding).replace(/-/g, '+').replace(/_/g, '/');
+    const rawData = window.atob(base64);
+    const outputArray = new Uint8Array(rawData.length);
+    for (let i = 0; i < rawData.length; ++i) {
+      outputArray[i] = rawData.charCodeAt(i);
+    }
+    return outputArray;
+  },
 
   /**
    * Send a local frontend-triggered notification via the active Service Worker

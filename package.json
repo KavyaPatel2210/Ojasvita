@@ -8,8 +8,13 @@
     "dev": "nodemon server.js",
     "mobile": "node mobile-start.js"
   },
-
-  "keywords": ["diet", "calorie", "mern", "health", "fitness"],
+  "keywords": [
+    "diet",
+    "calorie",
+    "mern",
+    "health",
+    "fitness"
+  ],
   "author": "Ojasvita Team",
   "license": "MIT",
   "dependencies": {
@@ -18,7 +23,9 @@
     "dotenv": "^16.3.1",
     "express": "^4.18.2",
     "jsonwebtoken": "^9.0.2",
-    "mongoose": "^8.0.3"
+    "mongoose": "^8.0.3",
+    "node-cron": "^4.2.1",
+    "web-push": "^3.6.7"
   },
   "devDependencies": {
     "nodemon": "^3.0.2"

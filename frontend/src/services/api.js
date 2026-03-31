@@ -49,7 +49,9 @@ export const authAPI = {
   getProfile: () => api.get('/auth/profile'),
   updateProfile: (userData) => api.put('/auth/profile', userData),
   updatePassword: (data) => api.put('/auth/password', data),
-  recalculateMetrics: () => api.post('/auth/recalculate')
+  recalculateMetrics: () => api.post('/auth/recalculate'),
+  subscribe: (subscription) => api.post('/auth/subscribe', { subscription }),
+  unsubscribe: () => api.post('/auth/unsubscribe')
 };
 
 export const mealsAPI = {

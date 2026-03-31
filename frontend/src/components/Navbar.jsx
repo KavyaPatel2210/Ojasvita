@@ -14,6 +14,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import { useNotifications } from '../context/NotificationContext';
 import { NotificationUtil } from '../utils/notificationUtil';
+import { authAPI } from '../services/api';
 
 
 /**
@@ -321,9 +322,18 @@ const Navbar = ({ onMenuClick }) => {
                     <button
                       onClick={() => {
                         closeDropdown();
-                        NotificationUtil.requestPermission().then(granted => {
+                        NotificationUtil.requestPermission().then(async granted => {
                           if (granted) {
-                            NotificationUtil.showNotification('🎉 Welcome!', 'Push notifications are now active for Ojasvita.');
+                            // First show local notification
+                            NotificationUtil.showNotification('🎉 Welcome!', 'Local notifications are active. Registering for server push...');
+                            
+                            // Then register for server-side push (works when app is closed)
+                            const success = await NotificationUtil.subscribeUserToServer(authAPI);
+                            if (success) {
+                              NotificationUtil.showNotification('🚀 Ready!', 'Server-side push notifications are now active! You will get alerts even when the app is closed.');
+                            } else {
+                              console.error("Failed to register server push");
+                            }
                           }
                         });
                       }}

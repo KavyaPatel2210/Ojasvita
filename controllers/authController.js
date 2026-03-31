@@ -156,6 +156,7 @@ exports.register = async (req, res) => {
         dailyCalorieNeed: user.dailyCalorieNeed,
         targetDailyCalories: user.targetDailyCalories,
         role: user.role,
+        preferences: user.preferences,
         createdAt: user.createdAt
       }
     });
@@ -277,6 +278,7 @@ exports.login = async (req, res) => {
         dailyCalorieNeed: account.dailyCalorieNeed,
         targetDailyCalories: account.targetDailyCalories,
         role: account.role,
+        preferences: account.preferences,
         createdAt: account.createdAt
       }
     });

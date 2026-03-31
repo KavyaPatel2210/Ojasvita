@@ -162,7 +162,8 @@ const userSchema = new mongoose.Schema({
   preferences: {
     remindMeals: { type: Boolean, default: true },
     remindWater: { type: Boolean, default: true },
-    weeklySummary: { type: Boolean, default: true }
+    weeklySummary: { type: Boolean, default: true },
+    pushSubscription: { type: Object, default: null }
   },
 
   // Account creation timestamp

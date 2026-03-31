@@ -10,6 +10,7 @@ const dotenv = require('dotenv');
 // Import custom modules
 const connectDB = require('./config/db');
 const { errorMiddleware } = require('./middleware/errorMiddleware');
+const { initPushScheduler } = require('./services/pushService');
 
 // Load environment variables
 dotenv.config();
@@ -81,6 +82,9 @@ connectDB()
       console.log(`🚀 Server running on port ${PORT}`);
       console.log(`🌍 Environment: ${process.env.NODE_ENV || 'development'}`);
       console.log(`🗄️ MongoDB connected`);
+      
+      // Initialize Push Notification Scheduler
+      initPushScheduler();
     });
   })
   .catch((err) => {
