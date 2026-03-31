@@ -1,6 +1,7 @@
 import React, { createContext, useContext, useState, useEffect, useCallback } from 'react';
 import { useAuth } from './AuthContext';
 import { notificationAPI, mealPlanAPI } from '../services/api';
+import { NotificationUtil } from '../utils/notificationUtil';
 
 // Create the notification context
 const NotificationContext = createContext();
@@ -163,11 +164,35 @@ export const NotificationProvider = ({ children }) => {
   const { isAuthenticated } = useAuth();
 
   /**
+   * Schedule native background notifications for all today's meals
+   * This guarantees they push even if the app closes!
+   */
+  const scheduleDailyMeals = useCallback(async () => {
+    try {
+      const today = new Date().toISOString().split('T')[0];
+      const response = await mealPlanAPI.getMealPlansByDate(today);
+      if (response.data.success && response.data.mealPlans) {
+        response.data.mealPlans.forEach(plan => {
+          if (plan.status === 'planned') {
+            const mealName = plan.mealTime.charAt(0).toUpperCase() + plan.mealTime.slice(1);
+            const title = `Time for ${mealName}!`;
+            const body = `It's ${plan.scheduledTime}. You have ${plan.plannedCalories} calories planned. Don't forget to log it!`;
+            NotificationUtil.scheduleNotification(`meal-${plan._id}`, title, body, plan.scheduledTime);
+          }
+        });
+      }
+    } catch (error) {
+      console.warn('Could not fetch daily meals for scheduling:', error);
+    }
+  }, []);
+
+  /**
    * Initial fetch and periodic checking
    */
   useEffect(() => {
     if (isAuthenticated) {
       fetchAllNotifications();
+      scheduleDailyMeals(); // Schedule the meals for background delivery
 
       const interval = setInterval(() => {
         fetchAllNotifications();
@@ -175,7 +200,7 @@ export const NotificationProvider = ({ children }) => {
 
       return () => clearInterval(interval);
     }
-  }, [fetchAllNotifications, isAuthenticated]);
+  }, [fetchAllNotifications, scheduleDailyMeals, isAuthenticated]);
 
   // Context value
   const value = {

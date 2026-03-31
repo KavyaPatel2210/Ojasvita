@@ -66,5 +66,47 @@ export const NotificationUtil = {
     } else {
       console.log("No notification permission granted.");
     }
+  },
+
+  /**
+   * Schedule a notification for a specific time today
+   * Uses TimestampTrigger for true background delivery (where supported), or graceful fallback
+   */
+  scheduleNotification: async (id, title, body, scheduledTimeStr) => {
+    if (!NotificationUtil.isSupported() || Notification.permission !== 'granted') return;
+    
+    // Parse time like "14:30"
+    const [hours, minutes] = scheduledTimeStr.split(':').map(Number);
+    const targetDate = new Date();
+    targetDate.setHours(hours, minutes, 0, 0);
+
+    const timeUntil = targetDate.getTime() - Date.now();
+    
+    // If time has passed, don't schedule
+    if (timeUntil <= 0) return;
+
+    try {
+      const registration = await navigator.serviceWorker.ready;
+      
+      // Feature check for Notification Triggers API
+      if ('showTrigger' in Notification.prototype) {
+        await registration.showNotification(title, {
+          tag: id, // unique tag prevents duplicates
+          body: body,
+          icon: '/logo.png',
+          badge: '/logo.png',
+          vibrate: [200, 100, 200],
+          // @ts-ignore
+          showTrigger: new TimestampTrigger(targetDate.getTime())
+        });
+      } else {
+        // Fallback for desktop/iOS: Fire if the app tab happens to be alive
+        setTimeout(() => {
+          NotificationUtil.showNotification(title, body, '/logo.png');
+        }, timeUntil);
+      }
+    } catch (err) {
+      console.warn("Could not schedule background notification:", err);
+    }
   }
 };
