@@ -160,7 +160,7 @@ connectDB().then(() => {
   app.listen(PORT, () => {
     console.log(`Ojasvita Server running on port ${PORT}`);
     console.log(`Environment: ${process.env.NODE_ENV || 'development'}`);
-    console.log(`Database: MongoDB Local - ojasvita`);
+    console.log(`Database: MongoDB Atlas - ojasvita`);
   });
 }).catch((err) => {
   console.error('Failed to start server due to database connection failure:');

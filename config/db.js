@@ -10,8 +10,8 @@
  * - Streak records for motivation tracking
  * - Analytics data for charts and progress
  * 
- * Required Database: MongoDB Local (not Atlas/cloud)
- * Connection String: mongodb://localhost:27017/ojasvita
+ * Required Database: MongoDB Atlas (Cloud)
+ * Connection String: mongodb+srv://ojasvitaUser:***@cluster0.bnodyfw.mongodb.net/ojasvita
  */
 
 const mongoose = require('mongoose');
@@ -33,25 +33,17 @@ const mongoose = require('mongoose');
 const connectDB = async () => {
   try {
     // Construct connection string from environment variable
-    // Fallback to default local MongoDB string if not provided
-    const mongoURI = process.env.MONGO_URI || 'mongodb://localhost:27017/ojasvita';
+    // Fallback to Atlas URI if .env is not provided
+    const mongoURI = process.env.MONGO_URI || 'mongodb+srv://ojasvitaUser:Kavya2210@cluster0.bnodyfw.mongodb.net/ojasvita?retryWrites=true&w=majority';
     
-    // Mongoose connection options for better performance and reliability
+    // Mongoose connection options for MongoDB Atlas
     const options = {
-      // Maximum time in milliseconds to wait for connection
-      serverSelectionTimeoutMS: 5000,
+      // Maximum time in milliseconds to wait for Atlas server selection
+      serverSelectionTimeoutMS: 10000,
       // Maximum time in milliseconds to wait for socket operations
       socketTimeoutMS: 45000,
-      // Use new URL parser (recommended)
-      useNewUrlParser: true,
-      // Use unified topology (recommended for new deployments)
-      useUnifiedTopology: true,
       // Connection pool size
       maxPoolSize: 10,
-      // Enable retry for initial connection
-      retryWrites: true,
-      // Retry interval in milliseconds
-      retryReads: true
     };
 
     // Attempt to connect to MongoDB
@@ -94,9 +86,9 @@ const connectDB = async () => {
     console.error(`Error: ${error.message}`);
     console.error('');
     console.error('Please ensure:');
-    console.error('1. MongoDB is installed and running locally');
-    console.error('2. MongoDB service is started (mongod)');
-    console.error('3. Connection string is correct in .env file');
+    console.error('1. MongoDB Atlas credentials are correct in .env file');
+    console.error('2. Your IP address is whitelisted in Atlas Network Access');
+    console.error('3. The cluster (cluster0.bnodyfw.mongodb.net) is active');
     console.error('========================================');
     
     // Exit process with failure code
