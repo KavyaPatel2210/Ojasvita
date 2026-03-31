@@ -1,6 +1,6 @@
 import React, { createContext, useContext, useState, useEffect, useCallback } from 'react';
 import { useAuth } from './AuthContext';
-import { notificationAPI, mealPlanAPI } from '../services/api';
+import { notificationAPI, mealPlanAPI, authAPI } from '../services/api';
 import { NotificationUtil } from '../utils/notificationUtil';
 
 // Create the notification context
@@ -43,9 +43,6 @@ export const NotificationProvider = ({ children }) => {
 
           // 1. Start with fetched data (most reliable)
           filteredFetched.forEach(n => notificationMap.set(n._id, n));
-
-          // 2. Override with local unread results if they are newer (optional, but good for reactivity)
-          // For now, simple replacement is fine as the backend is the source of truth
 
           return Array.from(notificationMap.values()).sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
         });
@@ -144,7 +141,6 @@ export const NotificationProvider = ({ children }) => {
    * Get formatted notification message based on notification type
    */
   const getNotificationMessage = (notification) => {
-    // Notification titles and messages are now mostly handled by the backend
     return {
       title: notification.title || 'Notification',
       message: notification.message || '',
@@ -170,7 +166,7 @@ export const NotificationProvider = ({ children }) => {
   useEffect(() => {
     if (isAuthenticated && useAuth().user && !useAuth().user.preferences?.pushSubscription) {
       if (Notification.permission === 'granted') {
-        NotificationUtil.subscribeUserToServer(require('../services/api').authAPI);
+        NotificationUtil.subscribeUserToServer(authAPI);
       }
     }
   }, [isAuthenticated]);
@@ -221,4 +217,3 @@ export const useNotifications = () => {
 };
 
 export default NotificationContext;
-
