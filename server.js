@@ -43,7 +43,7 @@ const corsOptions = {
   origin: function (origin, callback) {
     // Allow requests with no origin (like mobile apps or curl requests)
     if (!origin) return callback(null, true);
-    
+
     // Allow localhost and any local network IP (for mobile testing)
     const allowedOrigins = [
       'http://localhost:3000',
@@ -62,14 +62,14 @@ const corsOptions = {
       /^http:\/\/172\.(1[6-9]|2[0-9]|3[01])\.\d{1,3}\.\d{1,3}:\d+$/ // Private network
     ];
 
-    
+
     const isAllowed = allowedOrigins.some(allowed => {
       if (allowed instanceof RegExp) {
         return allowed.test(origin);
       }
       return allowed === origin;
     });
-    
+
     if (isAllowed) {
       callback(null, true);
     } else {
@@ -81,7 +81,10 @@ const corsOptions = {
   allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With']
 };
 
-app.use(cors(corsOptions));
+app.use(cors({
+  origin: true,
+  credentials: true
+}));
 
 
 // Express.json() middleware
@@ -125,7 +128,7 @@ app.use('/api/admin', require('./routes/adminRoutes'));
 // This allows the backend to serve the React application
 if (process.env.NODE_ENV === 'production') {
   app.use(express.static(path.join(__dirname, '../frontend/build')));
-  
+
   // Handle React routing - send all non-API requests to React app
   app.get('*', (req, res) => {
     res.sendFile(path.resolve(__dirname, '../frontend/build', 'index.html'));
