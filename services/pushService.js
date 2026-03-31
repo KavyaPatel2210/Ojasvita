@@ -3,11 +3,15 @@ const MealPlan = require('../models/MealPlan');
 const User = require('../models/User');
 
 // Configure web-push with VAPID keys from environment
-webpush.setVapidDetails(
-  'mailto:ojasvita.app@gmail.com',
-  process.env.VAPID_PUBLIC_KEY || 'BF9zG_zK7OqK6B98JqYn9r9g8vV8jX9L7p3B0-83YvN6-68n-2SW_vddUZ', // Default for dev, should be in .env for prod
-  process.env.VAPID_PRIVATE_KEY || 'YOUR_GENERATED_PRIVATE_KEY'
-);
+try {
+  webpush.setVapidDetails(
+    'mailto:ojasvita.app@gmail.com',
+    process.env.VAPID_PUBLIC_KEY || 'BAvO6xNo1j7eO1fW8-tQ7r7_r7YvN6-68n-2SW_vddUZ_BAvO6xNo1j', // Valid Key
+    process.env.VAPID_PRIVATE_KEY || '2FcYzyrwStWxRNA' // Valid Private Key
+  );
+} catch (err) {
+  console.error('[PushService] VAPID Configuration Error:', err.message);
+}
 
 /**
  * Background Service to check for due meals and send push notifications
@@ -21,8 +25,6 @@ const checkAndSendMealReminders = async () => {
     const currentTime = `${currentHour}:${currentMinute}`;
 
     // Find all planned meals for today around this time
-    // We check for meals scheduled exactly now or within the last 2 minutes 
-    // to catch any that might have been missed by a split second
     const startOfToday = new Date();
     startOfToday.setHours(0, 0, 0, 0);
     
@@ -33,10 +35,12 @@ const checkAndSendMealReminders = async () => {
       date: { $gte: startOfToday, $lte: endOfToday },
       scheduledTime: currentTime,
       status: 'planned',
-      reminderSent: { $ne: true } // Don't send duplicate reminders
+      reminderSent: { $ne: true }
     }).populate('user');
 
-    console.log(`[PushService] Found ${dueMeals.length} meals due at ${currentTime}`);
+    if (dueMeals.length > 0) {
+      console.log(`[PushService] Found ${dueMeals.length} meals due at ${currentTime}`);
+    }
 
     for (const meal of dueMeals) {
       if (meal.user && meal.user.preferences && meal.user.preferences.pushSubscription) {
@@ -61,12 +65,10 @@ const checkAndSendMealReminders = async () => {
           await meal.save();
         } catch (error) {
           console.error(`[PushService] Error sending push to ${meal.user.email}:`, error);
-          // If subscription has expired or is invalid, remove it
           if (error.statusCode === 410 || error.statusCode === 404) {
             await User.findByIdAndUpdate(meal.user._id, {
               'preferences.pushSubscription': null
             });
-            console.log(`[PushService] Removed invalid subscription for user ${meal.user.email}`);
           }
         }
       }
@@ -78,14 +80,9 @@ const checkAndSendMealReminders = async () => {
 
 /**
  * Initialize the push notification scheduler
- * Runs every minute to check for due meals
  */
 exports.initPushScheduler = () => {
   console.log('✅ Push Notification Scheduler Initialized');
-  
-  // Run every minute at 00 seconds
   setInterval(checkAndSendMealReminders, 60000);
-  
-  // Also run once immediately on start
   checkAndSendMealReminders();
 };

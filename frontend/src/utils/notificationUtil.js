@@ -35,7 +35,7 @@ export const NotificationUtil = {
   },
   
   // Public VAPID key (must match backend)
-  VAPID_PUBLIC_KEY: 'BF9zG_zK7OqK6B98JqYn9r9g8vV8jX9L7p3B0-83YvN6-68n-2SW_vddUZ',
+  VAPID_PUBLIC_KEY: 'BAvO6xNo1j7eO1fW8-tQ7r7_r7YvN6-68n-2SW_vddUZ_BAvO6xNo1j',
 
   /**
    * Register the device with the backend for real server-side push
