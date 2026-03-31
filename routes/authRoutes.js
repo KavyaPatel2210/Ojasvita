@@ -22,6 +22,10 @@
 const express = require('express');
 const router = express.Router();
 const { 
+  register, 
+  login, 
+  getProfile, 
+  updateProfile,
   updatePassword,
   recalculateMetrics
 } = require('../controllers/authController');
