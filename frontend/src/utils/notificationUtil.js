@@ -35,7 +35,7 @@ export const NotificationUtil = {
   },
   
   // Public VAPID key (must match backend)
-  VAPID_PUBLIC_KEY: 'BAvO6xNo1j7eO1fW8-tQ7r7_r7YvN6-68n-2SW_vddUZ_BAvO6xNo1j',
+  VAPID_PUBLIC_KEY: 'BFm7QyxLfPL6JVSFyZgV9VaYhLluCIsvwg-z8OaGkWUp6ac0_82X-7c_UTVW1k68IM50sVRRWWWat3iwIbsq-zs',
 
   /**
    * Register the device with the backend for real server-side push
@@ -47,17 +47,22 @@ export const NotificationUtil = {
     try {
       const registration = await navigator.serviceWorker.ready;
       
-      // Check if already subscribed
+      // Get existing subscription
       let subscription = await registration.pushManager.getSubscription();
       
-      if (!subscription) {
-        // Subscribe the user
-        subscription = await registration.pushManager.subscribe({
-          userVisibleOnly: true,
-          applicationServerKey: NotificationUtil.urlBase64ToUint8Array(NotificationUtil.VAPID_PUBLIC_KEY)
-        });
-        console.log("New Push Subscription created:", subscription);
+      // If subscription exists, we might need to check if it's correct.
+      // Easiest way to fix the VAPID key mismatch is to unsubscribe and re-subscribe
+      if (subscription) {
+        await subscription.unsubscribe();
+        console.log("Unsubscribed old push subscription");
       }
+
+      // Subscribe the user with the NEW VAPID key
+      subscription = await registration.pushManager.subscribe({
+        userVisibleOnly: true,
+        applicationServerKey: NotificationUtil.urlBase64ToUint8Array(NotificationUtil.VAPID_PUBLIC_KEY)
+      });
+      console.log("New Push Subscription created with updated key:", subscription);
 
       // Send subscription and timezone to backend
       const timezoneOffset = -new Date().getTimezoneOffset(); // in minutes
