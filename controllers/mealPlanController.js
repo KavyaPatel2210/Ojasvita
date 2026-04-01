@@ -341,7 +341,12 @@ exports.updateMealPlan = async (req, res) => {
       mealPlan.plannedFats = totals.fats;
     }
 
-    if (scheduledTime) mealPlan.scheduledTime = scheduledTime;
+    if (scheduledTime) {
+      if (scheduledTime !== mealPlan.scheduledTime) {
+        mealPlan.scheduledTime = scheduledTime;
+        mealPlan.reminderSent = false; // Reset reminder so it fires for the new time
+      }
+    }
     if (notes !== undefined) mealPlan.notes = notes;
     if (status) {
       mealPlan.status = status;
