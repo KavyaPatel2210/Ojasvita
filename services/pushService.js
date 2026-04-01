@@ -54,7 +54,7 @@ const checkAndSendMealReminders = async () => {
       const dueMeals = await MealPlan.find({
         user: user._id,
         date: { $gte: startOfUserDay, $lte: endOfUserDay },
-        scheduledTime: userCurrentTimeString,
+        scheduledTime: { $lte: userCurrentTimeString }, // Check anything due up to the current minute
         status: 'planned',
         reminderSent: { $ne: true }
       });
