@@ -64,9 +64,9 @@ export const NotificationUtil = {
       });
       console.log("New Push Subscription created with updated key:", subscription);
 
-      // Send subscription and timezone to backend
+      // Send subscription and timezone to backend (use .toJSON() to serialize PushSubscription correctly)
       const timezoneOffset = -new Date().getTimezoneOffset(); // in minutes
-      const response = await authAPI.subscribe({ subscription, timezoneOffset });
+      const response = await authAPI.subscribe({ subscription: subscription.toJSON(), timezoneOffset });
       return response.data.success;
     } catch (error) {
       console.error("Error subscribing to server push:", error);

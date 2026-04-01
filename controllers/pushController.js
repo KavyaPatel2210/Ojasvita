@@ -7,12 +7,18 @@ const User = require('../models/User');
  */
 exports.subscribe = async (req, res) => {
   try {
-    const { subscription, timezoneOffset } = req.body;
+    let { subscription, timezoneOffset } = req.body;
+    
+    // Safety check: sometimes subscription might be double-wrapped
+    if (subscription && subscription.subscription) {
+      timezoneOffset = subscription.timezoneOffset;
+      subscription = subscription.subscription;
+    }
 
-    if (!subscription) {
+    if (!subscription || !subscription.endpoint) {
       return res.status(400).json({
         success: false,
-        message: 'Subscription object is required'
+        message: 'A valid Push Subscription with an endpoint is required'
       });
     }
 
