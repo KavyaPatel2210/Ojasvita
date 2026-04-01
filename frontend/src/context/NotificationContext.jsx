@@ -164,7 +164,7 @@ export const NotificationProvider = ({ children }) => {
    * and don't have a subscription stored in their profile yet.
    */
   useEffect(() => {
-    if (isAuthenticated && user && !user.preferences?.pushSubscription) {
+    if (isAuthenticated && user) {
       if (typeof Notification !== 'undefined' && Notification.permission === 'granted') {
         NotificationUtil.subscribeUserToServer(authAPI);
       }

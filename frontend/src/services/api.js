@@ -50,7 +50,7 @@ export const authAPI = {
   updateProfile: (userData) => api.put('/auth/profile', userData),
   updatePassword: (data) => api.put('/auth/password', data),
   recalculateMetrics: () => api.post('/auth/recalculate'),
-  subscribe: (subscription) => api.post('/auth/subscribe', { subscription }),
+  subscribe: (data) => api.post('/auth/subscribe', data),
   unsubscribe: () => api.post('/auth/unsubscribe')
 };
 
