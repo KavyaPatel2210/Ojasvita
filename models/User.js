@@ -313,8 +313,6 @@ userSchema.virtual('bmiCategory').get(function() {
 });
 
 // Create indexes for frequently queried fields
-// Email index for fast login lookups
-userSchema.index({ email: 1 });
 // CreatedAt index for sorting by registration date
 userSchema.index({ createdAt: -1 });
 
