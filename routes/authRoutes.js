@@ -29,7 +29,7 @@ const {
   updatePassword,
   recalculateMetrics
 } = require('../controllers/authController');
-const { subscribe, unsubscribe } = require('../controllers/pushController');
+const { subscribe, unsubscribe, sendTestNotification } = require('../controllers/pushController');
 const { protect } = require('../middleware/authMiddleware');
 
 /**
@@ -134,6 +134,7 @@ router.post('/subscribe', protect, subscribe);
  * @desc    Remove push subscription
  */
 router.post('/unsubscribe', protect, unsubscribe);
+router.post('/test-push', protect, sendTestNotification);
 
 // Export the router
 module.exports = router;

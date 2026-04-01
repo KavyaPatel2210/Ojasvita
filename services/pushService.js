@@ -33,6 +33,8 @@ const checkAndSendMealReminders = async () => {
       return;
     }
 
+    // console.log(`[PushService] Running check for ${users.length} active users...`);
+
     for (const user of users) {
       // Calculate this specific user's current local time
       const offsetInMs = (user.preferences.timezoneOffset || 330) * 60 * 1000;
@@ -41,8 +43,6 @@ const checkAndSendMealReminders = async () => {
       const currentHour = String(userLocalTime.getUTCHours()).padStart(2, '0');
       const currentMinute = String(userLocalTime.getUTCMinutes()).padStart(2, '0');
       const userCurrentTimeString = `${currentHour}:${currentMinute}`;
-
-      // console.log(`[PushService] Checking user ${user.email} (Local Time: ${userCurrentTimeString})`);
 
       // 2. Find planned meals for this specific user at THEIR current local time
       const startOfUserDay = new Date(userLocalTime);
@@ -54,7 +54,7 @@ const checkAndSendMealReminders = async () => {
       const dueMeals = await MealPlan.find({
         user: user._id,
         date: { $gte: startOfUserDay, $lte: endOfUserDay },
-        scheduledTime: { $lte: userCurrentTimeString }, // Check anything due up to the current minute
+        scheduledTime: { $lte: userCurrentTimeString }, 
         status: 'planned',
         reminderSent: { $ne: true }
       });
@@ -73,7 +73,9 @@ const checkAndSendMealReminders = async () => {
           data: {
             url: '/meals',
             mealId: meal._id
-          }
+          },
+          tag: `meal-reminder-${meal._id}`, // Unique tag for this specific meal
+          renotify: true // Ensuring it pops up even if another exists
         });
 
         try {

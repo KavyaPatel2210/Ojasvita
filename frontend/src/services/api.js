@@ -51,7 +51,8 @@ export const authAPI = {
   updatePassword: (data) => api.put('/auth/password', data),
   recalculateMetrics: () => api.post('/auth/recalculate'),
   subscribe: (data) => api.post('/auth/subscribe', data),
-  unsubscribe: () => api.post('/auth/unsubscribe')
+  unsubscribe: () => api.post('/auth/unsubscribe'),
+  testPush: () => api.post('/auth/test-push')
 };
 
 export const mealsAPI = {

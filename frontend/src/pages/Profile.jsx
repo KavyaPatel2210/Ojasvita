@@ -5,6 +5,8 @@
 
 import React, { useState } from 'react';
 import { useAuth } from '../context/AuthContext';
+import { authAPI } from '../services/api';
+import { NotificationUtil } from '../utils/notificationUtil';
 
 const Profile = () => {
   const { user, updateUser } = useAuth();
@@ -52,12 +54,59 @@ const Profile = () => {
     }
   };
 
+  const handleTestPush = async () => {
+    try {
+      setMessage({ type: 'success', text: '🚀 Sending test notification... Please wait.' });
+      const response = await authAPI.testPush();
+      if (response.data.success) {
+        setMessage({ type: 'success', text: '✅ Test push sent! If you do not see it, check your browser permissions.' });
+      }
+    } catch (error) {
+      console.error('Test push error:', error);
+      setMessage({ 
+        type: 'error', 
+        text: error.response?.data?.message || 'Failed to send test push. Make sure notifications are enabled.' 
+      });
+    }
+  };
+
   return (
     <div className="space-y-6">
       {/* Header */}
-      <div>
-        <h1 className="text-2xl font-bold text-gray-900">Profile</h1>
-        <p className="text-gray-600">Manage your account and preferences</p>
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+        <div>
+          <h1 className="text-2xl font-bold text-gray-900">Profile</h1>
+          <p className="text-gray-600">Manage your account and preferences</p>
+        </div>
+        <div className="flex gap-2">
+          <button 
+            onClick={() => {
+              NotificationUtil.requestPermission().then(async granted => {
+                if (granted) {
+                  const success = await NotificationUtil.subscribeUserToServer(authAPI);
+                  if (success) {
+                    setMessage({ type: 'success', text: '🔔 Notifications re-synced successfully!' });
+                  }
+                }
+              });
+            }}
+            className="text-xs flex items-center gap-1.5 px-3 py-1.5 rounded-lg border border-primary-200 text-primary-600 hover:bg-primary-50 transition-colors"
+          >
+            <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9" />
+            </svg>
+            Re-sync Notifications
+          </button>
+          <button 
+            onClick={handleTestPush}
+            className="text-xs flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-primary-600 text-white hover:bg-primary-700 transition-all shadow-sm"
+          >
+            <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 10V3L4 14h7v7l9-11h-7z" />
+            </svg>
+            Test Push Alert
+          </button>
+        </div>
       </div>
 
       {/* Message */}
