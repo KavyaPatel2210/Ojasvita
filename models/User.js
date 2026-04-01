@@ -163,7 +163,8 @@ const userSchema = new mongoose.Schema({
     remindMeals: { type: Boolean, default: true },
     remindWater: { type: Boolean, default: true },
     weeklySummary: { type: Boolean, default: true },
-    pushSubscription: { type: Object, default: null }
+    pushSubscription: { type: Object, default: null },
+    timezoneOffset: { type: Number, default: 330 } // Default to IST (330 minutes)
   },
 
   // Account creation timestamp

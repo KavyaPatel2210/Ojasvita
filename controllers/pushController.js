@@ -7,7 +7,7 @@ const User = require('../models/User');
  */
 exports.subscribe = async (req, res) => {
   try {
-    const { subscription } = req.body;
+    const { subscription, timezoneOffset } = req.body;
 
     if (!subscription) {
       return res.status(400).json({
@@ -26,6 +26,9 @@ exports.subscribe = async (req, res) => {
 
     // Save subscription to user preferences
     user.preferences.pushSubscription = subscription;
+    if (timezoneOffset !== undefined) {
+      user.preferences.timezoneOffset = timezoneOffset;
+    }
     await user.save();
 
     res.status(200).json({

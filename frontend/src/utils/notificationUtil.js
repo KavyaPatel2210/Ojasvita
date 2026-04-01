@@ -59,8 +59,9 @@ export const NotificationUtil = {
         console.log("New Push Subscription created:", subscription);
       }
 
-      // Send subscription to backend
-      const response = await authAPI.subscribe(subscription);
+      // Send subscription and timezone to backend
+      const timezoneOffset = -new Date().getTimezoneOffset(); // in minutes
+      const response = await authAPI.subscribe({ subscription, timezoneOffset });
       return response.data.success;
     } catch (error) {
       console.error("Error subscribing to server push:", error);

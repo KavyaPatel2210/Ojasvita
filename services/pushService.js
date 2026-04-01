@@ -19,32 +19,41 @@ try {
  */
 const checkAndSendMealReminders = async () => {
   try {
-    const now = new Date();
-    const currentHour = String(now.getHours()).padStart(2, '0');
-    const currentMinute = String(now.getMinutes()).padStart(2, '0');
-    const currentTime = `${currentHour}:${currentMinute}`;
-
-    // Find all planned meals for today around this time
-    const startOfToday = new Date();
-    startOfToday.setHours(0, 0, 0, 0);
+    const nowUTC = new Date();
     
-    const endOfToday = new Date();
-    endOfToday.setHours(23, 59, 59, 999);
+    // 1. Find all users with active push subscriptions
+    const users = await User.find({ 
+      'preferences.pushSubscription': { $ne: null },
+      'preferences.remindMeals': true 
+    });
 
-    const dueMeals = await MealPlan.find({
-      date: { $gte: startOfToday, $lte: endOfToday },
-      scheduledTime: currentTime,
-      status: 'planned',
-      reminderSent: { $ne: true }
-    }).populate('user');
+    for (const user of users) {
+      // Calculate this specific user's current local time
+      // timezoneOffset is in minutes (e.g. 330 for IST)
+      const offsetInMs = (user.preferences.timezoneOffset || 0) * 60 * 1000;
+      const userLocalTime = new Date(nowUTC.getTime() + offsetInMs);
+      
+      const currentHour = String(userLocalTime.getUTCHours()).padStart(2, '0');
+      const currentMinute = String(userLocalTime.getUTCMinutes()).padStart(2, '0');
+      const userCurrentTimeString = `${currentHour}:${currentMinute}`;
 
-    if (dueMeals.length > 0) {
-      console.log(`[PushService] Found ${dueMeals.length} meals due at ${currentTime}`);
-    }
+      // 2. Find planned meals for this specific user at THEIR current local time
+      const startOfUserDay = new Date(userLocalTime);
+      startOfUserDay.setUTCHours(0, 0, 0, 0);
+      
+      const endOfUserDay = new Date(userLocalTime);
+      endOfUserDay.setUTCHours(23, 59, 59, 999);
 
-    for (const meal of dueMeals) {
-      if (meal.user && meal.user.preferences && meal.user.preferences.pushSubscription) {
-        const subscription = meal.user.preferences.pushSubscription;
+      const dueMeals = await MealPlan.find({
+        user: user._id,
+        date: { $gte: startOfUserDay, $lte: endOfUserDay },
+        scheduledTime: userCurrentTimeString,
+        status: 'planned',
+        reminderSent: { $ne: true }
+      });
+
+      for (const meal of dueMeals) {
+        const subscription = user.preferences.pushSubscription;
         const mealName = meal.mealTime.charAt(0).toUpperCase() + meal.mealTime.slice(1);
         
         const payload = JSON.stringify({
@@ -58,17 +67,16 @@ const checkAndSendMealReminders = async () => {
 
         try {
           await webpush.sendNotification(subscription, payload);
-          console.log(`[PushService] Sent notification to user ${meal.user.email} for ${meal.mealTime}`);
+          console.log(`[PushService] Sent notification to ${user.email} (Local Time: ${userCurrentTimeString})`);
           
-          // Mark as reminder sent
           meal.reminderSent = true;
+          meal.reminderSentAt = new Date();
           await meal.save();
         } catch (error) {
-          console.error(`[PushService] Error sending push to ${meal.user.email}:`, error);
+          console.error(`[PushService] Error sending to ${user.email}:`, error.message);
           if (error.statusCode === 410 || error.statusCode === 404) {
-            await User.findByIdAndUpdate(meal.user._id, {
-              'preferences.pushSubscription': null
-            });
+            user.preferences.pushSubscription = null;
+            await user.save();
           }
         }
       }
