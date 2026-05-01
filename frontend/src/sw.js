@@ -16,7 +16,7 @@ precacheAndRoute(self.__WB_MANIFEST || []);
 
 // Safe caching strategy: DO NOT cache API calls
 registerRoute(
-  ({ url }) => url.href.includes('ojasvita-production.up.railway.app/api'),
+  ({ url }) => url.href.includes('ojasvita.onrender.com/api'),
   new NetworkOnly()
 );
 
